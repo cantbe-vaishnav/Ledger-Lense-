@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Analyze annual reports, financial statements, and management commentary across years." />
+    <title>LedgerLens — Annual Report Analyzer</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Manrope:wght@400;500;600;700;800&family=Playfair+Display:ital,wght@0,600;0,700;1,600&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="app-shell">
+      <aside class="sidebar">
+        <a class="brand" href="#overview" aria-label="LedgerLens home">
+          <span class="brand-mark">L</span>
+          <span>Ledger<span>Lens</span></span>
+        </a>
+
+        <nav class="nav" aria-label="Primary navigation">
+          <a class="nav-link active" href="#overview"><span class="nav-icon">▦</span>Overview</a>
+          <a class="nav-link" href="#financials"><span class="nav-icon">↗</span>Financials</a>
+          <a class="nav-link" href="#commentary"><span class="nav-icon">◌</span>Commentary</a>
+          <a class="nav-link" href="#sources"><span class="nav-icon">▤</span>Source files</a>
+        </nav>
+
+        <div class="sidebar-bottom">
+          <div class="secure-note"><span>✦</span> Your documents stay in your browser.</div>
+          <button class="text-button" id="resetButton" type="button">Reset workspace</button>
+        </div>
+      </aside>
+
+      <main>
+        <header class="topbar">
+          <div class="crumb"><span class="status-dot"></span><span id="companyName">Workspace</span><span class="slash">/</span><span>Annual report analysis</span></div>
+          <button class="outline-button" id="exportButton" type="button">Export summary <span>↓</span></button>
+        </header>
+
+        <section class="hero" id="overview">
+          <div>
+            <p class="eyebrow">FINANCIAL INTELLIGENCE WORKSPACE</p>
+            <h1>See the story <em>behind</em> the statements.</h1>
+            <p class="hero-copy">Upload annual reports, financial statements, or raw company data. LedgerLens brings key financial movements and management commentary into one comparable view.</p>
+          </div>
+          <div class="hero-year"><span>COMPARING</span><strong id="yearRange">—</strong><small>fiscal years</small></div>
+        </section>
+
+        <section class="upload-section" id="sources">
+          <div class="section-heading">
+            <div><p class="eyebrow">01 / INPUTS</p><h2>Add company documents</h2></div>
+            <p>PDF annual reports, Excel workbooks, CSVs and text files are supported.</p>
+          </div>
+          <label class="dropzone" id="dropzone" for="fileInput">
+            <input id="fileInput" type="file" accept=".pdf,.xlsx,.xls,.csv,.txt" multiple hidden />
+            <span class="upload-glyph">↑</span>
+            <span><strong>Drop reports here</strong> or browse files</span>
+            <small>Up to 10 files · PDF, XLSX, XLS, CSV, TXT</small>
+          </label>
+          <div class="file-list" id="fileList" aria-live="polite">
+            <div class="empty-files">No sources added yet. Try the sample workspace to explore the analyzer.</div>
+          </div>
+          <div class="action-row">
+            <button class="primary-button" id="analyzeButton" type="button" disabled><span>✦</span> Analyze documents</button>
+            <button class="sample-button" id="sampleButton" type="button">Use sample workspace</button>
+          </div>
+        </section>
+
+        <section class="dashboard" id="financials" aria-live="polite">
+          <div class="section-heading dashboard-heading">
+            <div><p class="eyebrow">02 / FINDINGS</p><h2>Financial performance</h2></div>
+            <div class="year-tabs" id="yearTabs"></div>
+          </div>
+          <div class="metrics-grid" id="metricsGrid">
+            <div class="empty-state"><span class="empty-icon">⌁</span><h3>Waiting for source data</h3><p>Add at least two annual reports or financial data files to surface year-over-year changes.</p></div>
+          </div>
+
+          <div class="insight-grid">
+            <article class="panel chart-panel">
+              <div class="panel-header"><div><span class="panel-label">TREND</span><h3>Revenue & profitability</h3></div><span class="panel-unit" id="chartUnit">—</span></div>
+              <div class="chart-wrap"><canvas id="trendChart" aria-label="Revenue and net income trend"></canvas></div>
+              <div class="chart-legend"><span><i class="legend-revenue"></i>Revenue</span><span><i class="legend-income"></i>Net income</span></div>
+            </article>
+            <article class="panel drivers-panel">
+              <div class="panel-header"><div><span class="panel-label">DRIVERS</span><h3>What changed</h3></div></div>
+              <div class="drivers-list" id="driversList"><p class="placeholder">Financial drivers will appear after analysis.</p></div>
+            </article>
+          </div>
+        </section>
+
+        <section class="commentary-section" id="commentary">
+          <div class="section-heading"><div><p class="eyebrow">03 / MANAGEMENT VIEW</p><h2>Commentary signals</h2></div><p>Quoted excerpts are pulled from the uploaded source text and grouped by theme.</p></div>
+          <div class="commentary-grid" id="commentaryGrid">
+            <div class="empty-state commentary-empty"><span class="empty-icon">◌</span><h3>No commentary extracted</h3><p>Upload an annual report PDF or text file to identify management discussion themes.</p></div>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <template id="fileTemplate"><div class="file-item"><div class="file-type"></div><div class="file-info"><strong></strong><span></span></div><button type="button" class="remove-file" aria-label="Remove file">×</button></div></template>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
+    <script src="app.js"></script>
+  </body>
+</html>
